@@ -11,10 +11,7 @@ const handleDomo = (e) => {
         handleError('All fields are required');
         return false;
     }
-    var x = {
-        x: 13,
-        y: 23,
-    }
+   
     
 
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function (param) {

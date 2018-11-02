@@ -63,8 +63,8 @@ const getDomos = (request, response) => {
 };
 
 
-const searchDomos = (req, res) => Domo.DomoModel.findByID(req.body._id, (err, docs) => {
-  console.log(req.body);
+const searchDomos = (req, res) => Domo.DomoModel.findByID(req.query._id, (err, docs) => {
+  console.log(req.query);
   if (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error occured' });

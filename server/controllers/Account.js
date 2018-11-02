@@ -42,7 +42,7 @@ const signup = (request, response) => {
   const req = request;
   const res = response;
 
-  console.log(req.body);
+  //console.log(req.body);
 
   req.body.username = `${req.body.username}`;
   req.body.pass = `${req.body.pass}`;
@@ -97,13 +97,13 @@ const signup = (request, response) => {
 const getToken = (request, response) => {
   const req = request;
   const res = response;
-
+  //console.log(request.query);
   const csrfJSON = {
     csrfToken: req.csrfToken(),
   };
 
   res.json(csrfJSON);
-  console.log(csrfJSON);
+  //console.log(csrfJSON);
 };
 
 module.exports.loginPage = loginPage;
