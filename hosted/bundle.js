@@ -13,10 +13,6 @@ var handleDomo = function handleDomo(e) {
         handleError('All fields are required');
         return false;
     }
-    var x = {
-        x: 13,
-        y: 23
-    };
 
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function (param) {
         loadDomosFromServer();
@@ -57,6 +53,11 @@ var DomoForm = function DomoForm(props) {
     );
 };
 
+function levelUp(id) {
+    updateLevel(id);
+    loadDomosFromServer();
+}
+
 var DomoList = function DomoList(props) {
     if (props.domos.length === 0) {
         return React.createElement(
@@ -71,6 +72,7 @@ var DomoList = function DomoList(props) {
     }
 
     var domoNodes = props.domos.map(function (domo) {
+
         return React.createElement(
             "div",
             { key: domo._id, className: "domo" },
@@ -91,14 +93,16 @@ var DomoList = function DomoList(props) {
             ),
             React.createElement(
                 "h3",
-                { className: "domoLevel" },
+                { className: "domoLevel", id: "level" },
                 " Level: ",
                 domo.level,
                 " "
             ),
             React.createElement(
                 "button",
-                { className: "levelUp" },
+                { className: "levelUp", onClick: function onClick() {
+                        return levelUp(domo._id);
+                    } },
                 "Level Up"
             )
         );
@@ -110,26 +114,37 @@ var DomoList = function DomoList(props) {
         domoNodes
     );
 };
-var firstDomo = {
-
-    x: 3
-};
 
 var loadDomosFromServer = function loadDomosFromServer() {
-    sendAjax('GET', '/getDomos', $.param(firstDomo), function (data) {
-        console.log(data.domos);
-        firstDomo._id = data.domos[0]._id;
-        firstDomo._csrf = token;
+    sendAjax('GET', '/getDomos', null, function (data) {
+        //console.log(data.domos);
         ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
-        searchDomos();
+        //searchDomos();
     });
 };
 
-var searchDomos = function searchDomos() {
+var updateLevel = function updateLevel(domoID) {
 
-    console.log($.param(firstDomo));
-    sendAjax('GET', '/searchDomos', $.param(firstDomo), function (data) {
-        console.log(data);
+    var domo = {
+        _id: domoID,
+        _csrf: token
+
+        //console.log(domo);
+    };sendAjax('POST', '/updateLevel', $.param(domo), function (data) {
+        //console.log(data);
+        loadDomosFromServer();
+    });
+};
+
+var searchDomos = function searchDomos(domoID) {
+
+    var domo = {
+        _id: domoID,
+        _csrf: token
+
+        //console.log(domo);
+    };sendAjax('GET', '/searchDomos', $.param(domo), function (data) {
+        //console.log(data);
     });
 };
 
@@ -167,7 +182,7 @@ var redirect = function redirect(response) {
 };
 
 var sendAjax = function sendAjax(type, action, data, success) {
-    console.log(action + "  " + data);
+    //console.log(action + "  " + data);
     $.ajax({
         cache: false,
         type: type,

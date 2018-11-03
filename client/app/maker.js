@@ -43,6 +43,13 @@ const DomoForm = (props) => {
     );
 };
 
+
+function levelUp (id) {
+    updateLevel(id);
+    loadDomosFromServer();
+}
+
+
 const DomoList = function (props) {
     if (props.domos.length === 0) {
         return (
@@ -53,14 +60,18 @@ const DomoList = function (props) {
     }
 
 
+   
+
     const domoNodes = props.domos.map(function (domo) {
+        
+
         return (
             <div key={domo._id} className='domo'>
                 <img src="assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName"> Name: {domo.name} </h3>
                 <h3 className="domoAge"> Age: {domo.age} </h3>
-                <h3 className="domoLevel"> Level: {domo.level} </h3>
-                <button className="levelUp">Level Up</button>
+                <h3 className="domoLevel" id="level"> Level: {domo.level} </h3>
+                <button className="levelUp" onClick={() => levelUp(domo._id) }>Level Up</button>
             </div>
         );
     });
@@ -71,30 +82,51 @@ const DomoList = function (props) {
         </div>
     );
 };
-var firstDomo ={
-    
-    x: 3,
-};
+
+
+
+
+
+
 
 
 const loadDomosFromServer = () =>{
-    sendAjax('GET', '/getDomos',  $.param(firstDomo), (data) => {
-        console.log(data.domos);
-        firstDomo._id = data.domos[0]._id;
-        firstDomo._csrf = token;
+    sendAjax('GET', '/getDomos',  null, (data) => {
+        //console.log(data.domos);
         ReactDOM.render(
             <DomoList domos={data.domos} />, document.querySelector("#domos")
         );
-        searchDomos();
+        //searchDomos();
     });
 
 };
 
-const searchDomos = () => {
 
-    console.log($.param(firstDomo));
-    sendAjax('GET', '/searchDomos', $.param(firstDomo), (data)=>{
-        console.log(data);
+const updateLevel = (domoID) => {
+
+    var domo = {
+        _id: domoID,
+        _csrf: token,
+    }
+
+    //console.log(domo);
+    sendAjax('POST', '/updateLevel', $.param(domo), (data)=>{
+        //console.log(data);
+        loadDomosFromServer();
+
+    });
+};
+
+const searchDomos = (domoID) => {
+
+    var domo = {
+        _id: domoID,
+        _csrf: token,
+    }
+
+    //console.log(domo);
+    sendAjax('GET', '/searchDomos', $.param(domo), (data)=>{
+        //console.log(data);
     });
 };
 

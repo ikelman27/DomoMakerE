@@ -170,7 +170,7 @@ var redirect = function redirect(response) {
 };
 
 var sendAjax = function sendAjax(type, action, data, success) {
-    console.log(action + "  " + data);
+    //console.log(action + "  " + data);
     $.ajax({
         cache: false,
         type: type,

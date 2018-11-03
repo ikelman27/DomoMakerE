@@ -52,7 +52,7 @@ const getDomos = (request, response) => {
   const req = request;
   const res = response;
 
-  
+
   return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
@@ -72,7 +72,17 @@ const searchDomos = (req, res) => Domo.DomoModel.findByID(req.query._id, (err, d
   return res.json({ domos: docs });
 });
 
+const increaseLevel = (req, res) => Domo.DomoModel.updateLevel(req.body._id, (err, docs) => {
+  console.log(req.body);
+  if (err) {
+    console.log(err);
+    return res.status(400).json({ error: 'An error occured' });
+  }
+  return res.json({ domos: docs });
+});
 
+
+module.exports.increaseLevel = increaseLevel;
 module.exports.searchDomos = searchDomos;
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
